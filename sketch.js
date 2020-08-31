@@ -143,8 +143,9 @@ class FieldArrow {
 
 let space;
 function setup() {
-  createCanvas(1600, 700);
-  space = new Space(1600, 600);
+  let w = screen.width-20;
+  createCanvas(w, 600); // 10px * 2 margin
+  space = new Space(w, 600);
   electricField = new Field(chargeFunction=(particle => particle.electricCharge));
   space.addField(electricField);
   particle = new Particle(100, 100, positionFunction=(particle => particle.space.mousePosition))
@@ -154,7 +155,7 @@ function setup() {
 function draw() {
   currentTime = space.getCurrentTime();
   background(240);
+  space.display(0, 0);
   textSize(32);
   text(formatTime(currentTime), 10, 30);
-  space.display(10, 50);
 }
