@@ -14,7 +14,6 @@ export default class Field {
     this.space = space;
     this.sketch = space.sketch
     this.shapeFactory = new ArrowDisplay(this.sketch)
-    this._renderer = space._renderer;
     this.shapeFactory.warmup(this.displayR);
     for (var i = 0; i < (this.space.w / this.arrowDisplayFrequency); i++) {
       for (var j = 0; j < (this.space.h / this.arrowDisplayFrequency); j++) {
@@ -43,7 +42,6 @@ export default class Field {
 class FieldArrow {
   constructor(field, x, y) {
     this.field = field;
-    this._renderer = this.field._renderer;
     this.sketch = this.field.sketch
     this.shapeFactory = this.field.shapeFactory
     this.position = this.sketch.createVector(x, y);
@@ -64,16 +62,6 @@ class FieldArrow {
 
   render(){
     let arrow = this.shapeFactory.arrow(this.displayR, this.color, this.angle)
-    this._renderer.image(arrow, this.position.x, this.position.y);
-    // this._renderer.push();
-    // this._renderer.stroke(this.color);
-    // this._renderer.strokeWeight(this.displayStrokeWeight);
-    // this._renderer.fill(this.color);
-    // this._renderer.translate(this.position.x, this.position.y);
-    // this._renderer.line(0, 0, this.sketch.cos(this.angle)*this.displayR, this.sketch.sin(this.angle)*this.displayR);
-    // this._renderer.rotate(this.angle);
-    // this._renderer.translate(this.displayR - this.displayArrowSize, 0);
-    // this._renderer.triangle(0, this.displayArrowSize / 2, 0, -this.displayArrowSize / 2, this.displayArrowSize, 0);
-    // this._renderer.pop();
+    this.sketch.image(arrow, this.position.x, this.position.y);
   }
 }

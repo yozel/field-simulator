@@ -1,5 +1,9 @@
 import * as utils from './utils.js'
 
+function changePalette(color, palette) {
+  return Math.round(Math.round((color / 255) * palette) * ( 255 / palette ))
+}
+
 class ArrowDisplay {
   constructor(sketch){
     this.sketch = sketch
@@ -12,9 +16,9 @@ class ArrowDisplay {
   }
 
   warmup(r) {
-    // for (var i=0; i <= 255; i++){
-    //   this.arrowColored(r, [255-i, 0, i])
-    // }
+    for (var i=0; i <= 255; i++){
+      this.arrowColored(r, [255-i, 0, i])
+    }
   }
 
   arrowMask(r) {
@@ -39,9 +43,6 @@ class ArrowDisplay {
   arrowColored(r, color){
     r = Math.round(r)
     color = [Math.round(color[0]), Math.round(color[1]), Math.round(color[2])]
-    if (color[0] % 2 != 0) color[0]+=1;
-    if (color[1] % 2 != 0) color[1]+=1;
-    if (color[2] % 2 != 0) color[2]+=1;
     if (this.arrowColored.cache[[r, color]]) return this.arrowColored.cache[[r, color]];
     let arrowMask = this.arrowMask(r)
     let colorImage = this.sketch.createGraphics(arrowMask.width, arrowMask.height).background(color);
@@ -51,11 +52,13 @@ class ArrowDisplay {
     return (this.arrowColored.cache[[r, color]] = image)
   }
 
-
   arrow(r, color, angle) {
     r = Math.round(r)
-    color = [Math.round(color[0]), Math.round(color[1]), Math.round(color[2])]
-    angle = utils.round(angle, 2)
+    let colorPalette = 8
+    color = [changePalette(color[0], colorPalette), changePalette(color[1], colorPalette), changePalette(color[2], colorPalette)]
+    angle = utils.round(angle, 1) * 10
+    if (angle % 2 != 0) angle -= angle % 2
+    angle /= 10
     if (this.arrow.cache[[r, color, angle]]) return this.arrow.cache[[r, color, angle]];
     let image = this.arrowColored(r, color)
     let pg = this.sketch.createGraphics(image.width, image.width)

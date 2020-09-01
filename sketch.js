@@ -22,15 +22,25 @@ export function simulator(width, height, node) {
       });
       space.addField(electricField);
 
-      let particleTargetPosition = sketch.createVector(100, 200);
-      let particle = new Particle(sketch, 100, 100, function(particle){
-        let acceleration = p5.Vector.sub(particleTargetPosition, particle.position);
+      let particleTargetPosition1 = sketch.createVector(sketch.width/2, 250);
+      let particle1 = new Particle(sketch, sketch.width/2, 100, -1, function(particle){
+        let acceleration = p5.Vector.sub(particleTargetPosition1, particle.position);
         acceleration.mult(0.001);
         particle.velocity.add(acceleration)
         particle.position.add(particle.velocity);
       });
 
-      space.addParticle(particle);
+      space.addParticle(particle1);
+
+      let particleTargetPosition2 = sketch.createVector(sketch.width/2, 250);
+      let particle2 = new Particle(sketch, sketch.width/2, 400, 1, function(particle){
+        let acceleration = p5.Vector.sub(particleTargetPosition2, particle.position);
+        acceleration.mult(0.001);
+        particle.velocity.add(acceleration)
+        particle.position.add(particle.velocity);
+      });
+
+      space.addParticle(particle2);
     }
 
     sketch.draw = () => {
@@ -39,6 +49,8 @@ export function simulator(width, height, node) {
       space.render(0, 0);
       if (space.paused) return;
       sketch.textSize(32);
+      sketch.stroke("black");
+      sketch.fill("black");
       sketch.text("FPS: " + sketch.frameRate().toFixed(2), 10, height - 10);
       sketch.text(utils.formatTime(currentTime), 10, 30);
     }
