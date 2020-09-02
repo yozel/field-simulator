@@ -1,7 +1,9 @@
 import Space from './simulation/space.js'
 import Field from './simulation/field.js'
 import Particle from './simulation/particle.js'
+import { Vector } from './simulation/vector.js'
 import * as utils from './simulation/utils.js'
+
 
 export function simulator(width, height, node) {
   let seed = (sketch) => {

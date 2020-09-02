@@ -1,3 +1,5 @@
+import { Vector } from './vector.js'
+
 export default class Particle {
   constructor(sketch, x, y, charge, positionUpdateFunction) {
     this.sketch = sketch

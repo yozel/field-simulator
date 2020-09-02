@@ -35,9 +35,6 @@ export default class Space {
 
   update(x, y) {
     if (this.paused) return;
-    let mX = this.sketch.min(this.sketch.max(this.sketch.mouseX - x, 0), this.w);
-    let mY = this.sketch.min(this.sketch.max(this.sketch.mouseY - y, 0), this.h);
-    this.mousePosition = this.sketch.createVector(mX, mY);
     this.sketch.background(220);
     for (var particle of this.particles) {
       particle.update();

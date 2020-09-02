@@ -1,4 +1,5 @@
 import ArrowDisplay from './shapes.js'
+import { Vector } from './vector.js'
 
 export default class Field {
   constructor(fieldFunction) {
@@ -55,7 +56,7 @@ class FieldArrow {
 
   update(){
     let vec = this.field.fieldFunction(this.position, this.field.space.particles)
-    let mag600 = this.sketch.min(vec.mag() / 1000, 255);
+    let mag600 = Math.min(vec.mag() / 1000, 255);
     this.color = [mag600, 0, 255-mag600];
     this.angle = vec.heading();
   }

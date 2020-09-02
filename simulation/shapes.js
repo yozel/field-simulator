@@ -26,7 +26,7 @@ class ArrowDisplay {
     if (this.arrowMask.cache[r]) return this.arrowMask.cache[r];
     let arrowSize = 8
     let lineWidth = 2
-    let triangleSideLen = arrowSize * 2 / this.sketch.sqrt(3)
+    let triangleSideLen = arrowSize * 2 / Math.sqrt(3)
     let color = [0,0,0]
     let pg = this.sketch.createGraphics(r, triangleSideLen)
     pg.stroke(color)
