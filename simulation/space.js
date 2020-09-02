@@ -33,7 +33,7 @@ export default class Space {
     this.particles.push(particle);
   }
 
-  update(x, y) {
+  update() {
     if (this.paused) return;
     this.sketch.background(220);
     for (var particle of this.particles) {
@@ -44,13 +44,13 @@ export default class Space {
     }
   }
 
-  render(x, y) {
+  render() {
     if (this.paused) return;
     for (var field of this.fields) {
-      field.render();
+      field.render(this.sketch);
     }
     for (var particle of this.particles) {
-      particle.render();
+      particle.render(this.sketch);
     }
   }
 

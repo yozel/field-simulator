@@ -1,5 +1,5 @@
-import ArrowDisplay from './shapes.js'
-import { Vector } from './vector.js'
+import { ArrowDisplay } from './draw/arrow.js'
+import { Vector } from './utils/vector.js'
 
 export default class Field {
   constructor(fieldFunction) {
@@ -13,9 +13,7 @@ export default class Field {
     let arrowCount = 0;
     this.displayR = 15;
     this.space = space;
-    this.sketch = space.sketch
-    this.shapeFactory = new ArrowDisplay(this.sketch)
-    this.shapeFactory.warmup(this.displayR);
+    this.shapeFactory = new ArrowDisplay()
     for (var i = 0; i < (this.space.w / this.arrowDisplayFrequency); i++) {
       for (var j = 0; j < (this.space.h / this.arrowDisplayFrequency); j++) {
         if (arrowCount <= maxArrow){
@@ -33,9 +31,9 @@ export default class Field {
     }
   }
 
-  render() {
+  render(sketch) {
     for (var fieldArrow of this.fieldArrows) {
-      fieldArrow.render();
+      fieldArrow.render(sketch);
     }
   }
 }
@@ -43,9 +41,8 @@ export default class Field {
 class FieldArrow {
   constructor(field, x, y) {
     this.field = field;
-    this.sketch = this.field.sketch
     this.shapeFactory = this.field.shapeFactory
-    this.position = this.sketch.createVector(x, y);
+    this.position = new Vector(x, y);
     this.displayR = this.field.displayR;
     this.displayStrokeWeight = 2;
     this.displayArrowSize = 2;
@@ -61,8 +58,8 @@ class FieldArrow {
     this.angle = vec.heading();
   }
 
-  render(){
-    let arrow = this.shapeFactory.arrow(this.displayR, this.color, this.angle)
-    this.sketch.image(arrow, this.position.x, this.position.y);
+  render(sketch){
+    let arrow = this.shapeFactory.arrow(sketch, this.displayR, this.color, this.angle)
+    sketch.image(arrow, this.position.x, this.position.y);
   }
 }
