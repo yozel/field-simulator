@@ -1,7 +1,8 @@
-import { ArrowDisplay } from './draw/arrow.js'
+import { ArrowDisplay } from '../draw/arrow.js'
 import { Vector } from './utils/vector.js'
+import { sketch } from '../draw/draw.js'
 
-export default class Field {
+export class Field {
   constructor(fieldFunction) {
     this.fieldFunction = fieldFunction;
     this.fieldArrows = [];
@@ -31,9 +32,9 @@ export default class Field {
     }
   }
 
-  render(sketch) {
+  render() {
     for (var fieldArrow of this.fieldArrows) {
-      fieldArrow.render(sketch);
+      fieldArrow.render();
     }
   }
 }
@@ -58,8 +59,8 @@ class FieldArrow {
     this.angle = vec.heading();
   }
 
-  render(sketch){
-    let arrow = this.shapeFactory.arrow(sketch, this.displayR, this.color, this.angle)
+  render(){
+    let arrow = this.shapeFactory.arrow(this.displayR, this.color, this.angle)
     sketch.image(arrow, this.position.x, this.position.y);
   }
 }

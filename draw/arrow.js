@@ -1,4 +1,5 @@
-import * as utils from '../utils/utils.js'
+import * as utils from '../simulation/utils/utils.js'
+import { sketch } from './draw.js'
 
 function changePalette(color, palette) {
   return Math.round(Math.round((color / 255) * palette) * ( 255 / palette ))
@@ -14,7 +15,7 @@ export class ArrowDisplay {
     this.arrow.cache = {}
   }
 
-  arrowMask(sketch, r) {
+  arrowMask(r) {
     r = Math.round(r)
     if (this.arrowMask.cache[r]) return this.arrowMask.cache[r];
     let arrowSize = 8
@@ -33,11 +34,11 @@ export class ArrowDisplay {
     return (this.arrowMask.cache[r] = pg)
   }
 
-  arrowColored(sketch, r, color){
+  arrowColored(r, color){
     r = Math.round(r)
     color = [Math.round(color[0]), Math.round(color[1]), Math.round(color[2])]
     if (this.arrowColored.cache[[r, color]]) return this.arrowColored.cache[[r, color]];
-    let arrowMask = this.arrowMask(sketch, r)
+    let arrowMask = this.arrowMask(r)
     let colorImage = sketch.createGraphics(arrowMask.width, arrowMask.height).background(color);
     colorImage.background(color);
     let image = colorImage.get()
@@ -45,7 +46,7 @@ export class ArrowDisplay {
     return (this.arrowColored.cache[[r, color]] = image)
   }
 
-  arrow(sketch, r, color, angle) {
+  arrow(r, color, angle) {
     r = Math.round(r)
     let colorPalette = 8
     color = [changePalette(color[0], colorPalette), changePalette(color[1], colorPalette), changePalette(color[2], colorPalette)]
@@ -53,7 +54,7 @@ export class ArrowDisplay {
     if (angle % 2 != 0) angle -= angle % 2
     angle /= 10
     if (this.arrow.cache[[r, color, angle]]) return this.arrow.cache[[r, color, angle]];
-    let image = this.arrowColored(sketch, r, color)
+    let image = this.arrowColored(r, color)
     let pg = sketch.createGraphics(image.width, image.width)
     pg.translate(pg.width/2, pg.height/2)
     pg.rotate(angle)

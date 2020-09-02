@@ -1,7 +1,8 @@
 import { Vector } from './utils/vector.js'
+import { sketch } from '../draw/draw.js'
 
 export default class Particle {
-  constructor(sketch, x, y, charge, positionUpdateFunction) {
+  constructor(x, y, charge, positionUpdateFunction) {
     this.positionUpdateFunction = positionUpdateFunction
     this.position = new Vector(x, y);
     this.velocity = new Vector(0, 0);
@@ -17,7 +18,7 @@ export default class Particle {
     this.positionUpdateFunction(this);
   }
 
-  render(sketch){
+  render(){
     sketch.strokeWeight(2);
     if (this.electricCharge < 0) {
       sketch.stroke("#2f72ad");
