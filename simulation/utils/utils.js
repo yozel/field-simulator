@@ -18,3 +18,7 @@ export function formatTime(timestamp) {
 export function round(num, decimal_places) {
   return Math.round((num + Number.EPSILON) * 10*decimal_places) / (10*decimal_places)
 }
+
+export function log(x=10, y) {
+  return Math.log(y) / Math.log(x);
+}

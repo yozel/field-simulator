@@ -1,31 +1,27 @@
 import { createSpace } from './simulation/space.js'
-import { setSketch } from './draw/draw.js'
-import * as utils from './simulation/utils/utils.js'
-
+import * as draw from './draw/draw.js'
 
 export function simulator(width, height, node) {
-  let seed = (sketch) => {
-    setSketch(sketch)
-    let space
-
+  let space = createSpace(width, height)
+  return new p5((sketch) => {
     sketch.setup = () => {
-      sketch.createCanvas(width, height, "WebGL");
-      space = createSpace(width, height)
-
+      draw.createCanvas(sketch, width, height)
     }
 
     sketch.draw = () => {
+      space.update();
       let currentTime = space.getCurrentTime();
-      space.update(0, 0);
-      space.render(0, 0);
-      if (space.paused) return;
-      sketch.textSize(32);
-      sketch.stroke("black");
-      sketch.fill("black");
-      sketch.text("FPS: " + sketch.frameRate().toFixed(2), 10, height - 10);
-      sketch.text(utils.formatTime(currentTime), 10, 30);
+      if (!space.paused){
+        draw.background()
+
+        for (var field of space.fields) {
+          for (var fieldArrow of field.fieldArrows) draw.fieldArrow(fieldArrow)
+        }
+
+        for (var particle of space.particles) draw.particle(particle)
+        draw.info(currentTime)
+      }
     }
-  }
-  return new p5(seed, node)
+  }, node)
 }
 

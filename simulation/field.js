@@ -1,12 +1,11 @@
-import { ArrowDisplay } from '../draw/arrow.js'
 import { Vector } from './utils/vector.js'
-import { sketch } from '../draw/draw.js'
 
 export class Field {
   constructor(fieldFunction) {
     this.fieldFunction = fieldFunction;
     this.fieldArrows = [];
-    this.arrowDisplayFrequency = 30
+    this.particles = [];
+    this.arrowDisplayFrequency = 30;
   }
 
   initSpace(space){
@@ -14,7 +13,6 @@ export class Field {
     let arrowCount = 0;
     this.displayR = 15;
     this.space = space;
-    this.shapeFactory = new ArrowDisplay()
     for (var i = 0; i < (this.space.w / this.arrowDisplayFrequency); i++) {
       for (var j = 0; j < (this.space.h / this.arrowDisplayFrequency); j++) {
         if (arrowCount <= maxArrow){
@@ -26,41 +24,36 @@ export class Field {
     }
   }
 
+  getForcePerCharge(position){
+    return this.particles.reduce((acc, particle) => acc.add(this.fieldFunction(particle, position)), new Vector(0, 0));
+  }
+
+  effectCheck(particle){
+    return Boolean(particle.charge || particle.testCharge);
+  }
+
+  refreshParticles(){
+    let particles = []
+    this.space.particles.filter(particle => particle.charge).forEach(particle => particles.push(particle))
+    this.particles = particles
+  }
+
   update() {
     for (var fieldArrow of this.fieldArrows) {
       fieldArrow.update();
     }
   }
-
-  render() {
-    for (var fieldArrow of this.fieldArrows) {
-      fieldArrow.render();
-    }
-  }
 }
 
 class FieldArrow {
+  force = new Vector(0, 0);
   constructor(field, x, y) {
     this.field = field;
-    this.shapeFactory = this.field.shapeFactory
     this.position = new Vector(x, y);
-    this.displayR = this.field.displayR;
-    this.displayStrokeWeight = 2;
-    this.displayArrowSize = 2;
-
-    this.color = "black";
-    this.angle = 3;
   }
 
   update(){
-    let vec = this.field.fieldFunction(this.position, this.field.space.particles)
-    let mag600 = Math.min(vec.mag() / 1000, 255);
-    this.color = [mag600, 0, 255-mag600];
-    this.angle = vec.heading();
+    this.force = this.field.getForcePerCharge(this.position)
   }
 
-  render(){
-    let arrow = this.shapeFactory.arrow(this.displayR, this.color, this.angle)
-    sketch.image(arrow, this.position.x, this.position.y);
-  }
 }

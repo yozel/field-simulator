@@ -1,34 +1,45 @@
 import { Vector } from './utils/vector.js'
-import { sketch } from '../draw/draw.js'
+import * as utils from './utils/utils.js'
 
-export default class Particle {
-  constructor(x, y, charge, positionUpdateFunction) {
-    this.positionUpdateFunction = positionUpdateFunction
+export class Particle {
+  space = null;
+  constructor(x, y, properties, forceFunction=null) {
+    this.forceFunction = forceFunction;
     this.position = new Vector(x, y);
     this.velocity = new Vector(0, 0);
-    this.displayR = 30;
-    this.electricCharge = charge;
+    this.fields = [];
+    this.mass = properties.mass;
+    this.charge = properties.charge;
+    this.testCharge = properties.testCharge;
   }
 
   initSpace(space){
     this.space = space;
   }
 
-  update(){
-    this.positionUpdateFunction(this);
+  refreshFields(){
+    const fields = [];
+    this.space.fields.forEach(field => {field.effectCheck(this) && fields.push(field)});
+    this.fields = fields;
   }
 
-  render(){
-    sketch.strokeWeight(2);
-    if (this.electricCharge < 0) {
-      sketch.stroke("#2f72ad");
-      sketch.fill("#42a1f5");
+  getFieldForces(){
+    const charge = this.charge || this.testCharge;
+    const forcePerCharge = this.fields.reduce((acc, f) => acc.add(f.getForcePerCharge(this.position)), new Vector(0, 0));
+    return forcePerCharge.mult(charge);
+  }
+
+  update(){
+    // this.velocity.add(acceleration) == this.velocity.add(force.div(this.mass)) ==
+    let force;
+    if (this.forceFunction) {
+      force = this.forceFunction(this)
+    } else {
+      force = this.getFieldForces(this)
     }
-    if (this.electricCharge > 0) {
-      sketch.stroke("#f8333c");
-      sketch.fill("#fcab10");
-    }
-    sketch.ellipse(this.position.x, this.position.y, this.displayR, this.displayR);
+    const acceleration = force.div(this.mass);
+    this.velocity.add(acceleration);
+    this.position.add(this.velocity);
   }
 }
 

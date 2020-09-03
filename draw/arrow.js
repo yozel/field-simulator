@@ -5,7 +5,7 @@ function changePalette(color, palette) {
   return Math.round(Math.round((color / 255) * palette) * ( 255 / palette ))
 }
 
-export class ArrowDisplay {
+class ArrowDisplay {
   constructor(){
     this.minAngle = 999
     this.maxAngle = -999
@@ -36,7 +36,7 @@ export class ArrowDisplay {
 
   arrowColored(r, color){
     r = Math.round(r)
-    color = [Math.round(color[0]), Math.round(color[1]), Math.round(color[2])]
+    color = [Math.round(color[0]), Math.round(color[1]), Math.round(color[2]), Math.round(color[3])]
     if (this.arrowColored.cache[[r, color]]) return this.arrowColored.cache[[r, color]];
     let arrowMask = this.arrowMask(r)
     let colorImage = sketch.createGraphics(arrowMask.width, arrowMask.height).background(color);
@@ -48,10 +48,10 @@ export class ArrowDisplay {
 
   arrow(r, color, angle) {
     r = Math.round(r)
-    let colorPalette = 8
-    color = [changePalette(color[0], colorPalette), changePalette(color[1], colorPalette), changePalette(color[2], colorPalette)]
+    let colorPalette = 16
+    color = [changePalette(color[0], colorPalette), changePalette(color[1], colorPalette), changePalette(color[2], colorPalette), color[3]]
     angle = utils.round(angle, 1) * 10
-    if (angle % 2 != 0) angle -= angle % 2
+    if (angle % 2 != 0) angle -= 1
     angle /= 10
     if (this.arrow.cache[[r, color, angle]]) return this.arrow.cache[[r, color, angle]];
     let image = this.arrowColored(r, color)
@@ -62,3 +62,5 @@ export class ArrowDisplay {
     return ( this.arrow.cache[[r, color, angle]] = pg);
   }
 }
+
+export let arrowDisplayFactory = new ArrowDisplay()
